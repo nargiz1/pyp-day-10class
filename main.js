@@ -2,10 +2,10 @@ let startBtn = document.querySelector("#start");
 let stopBtn = document.querySelector("#stop");
 let gameBox = document.querySelector("#game-box");
 let radios = document.getElementsByName("level");
-let finalScores = document.getElementById("scores");
+let finalScores = document.querySelector("tbody");
 
 
-let time;
+let time = 3000;
 let game;
 let mySound = new Audio('pop-1-35897.mp3');
 let players =[];
@@ -29,27 +29,33 @@ startBtn.addEventListener("click", function(){
     }
     players.push(newPlayer);
     player = newPlayer;
+    stopBtn.removeAttribute("disabled")
+    startBtn.setAttribute("disabled", true);
     startGame()
 });
 
 stopBtn.addEventListener("click", function(){
     clearInterval(game);
+    game = undefined;
     document.querySelectorAll(".bubble").forEach(bubble => {
         gameBox.removeChild(bubble)
     });
     localStorage.setItem(player.name, player.score);
     if(players.length > 0){
         finalScores.innerHTML = ''
-        players.sort().forEach(pl => {
+        players.sort((a, b) => b.score - a.score)
+        players.forEach(pl => {
             createTd(pl.name, pl.score)
         })
     }
+    startBtn.removeAttribute("disabled")
+    stopBtn.setAttribute("disabled", true);
 })
 
 function createBubble(){
-    let top = Math.floor(Math.random() * 500);
-    let left = Math.floor(Math.random() * 500);
-    let size = Math.floor(Math.random() * 100);
+    let top = Math.floor(Math.random() * 200);
+    let left = Math.floor(Math.random() * 600);
+    let size = Math.random() * (200 - 20) + 20;
     var randomColor = Math.floor(Math.random()*16777215).toString(16);
 
     let bubble = document.createElement("div");
