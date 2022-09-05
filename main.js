@@ -3,7 +3,6 @@ let stopBtn = document.querySelector("#stop");
 let gameBox = document.querySelector("#game-box");
 let radios = document.getElementsByName("level");
 let finalScores = document.getElementById("scores");
-let form = document.querySelector("form")
 
 
 let time;
@@ -12,6 +11,16 @@ let mySound = new Audio('pop-1-35897.mp3');
 let players =[];
 let player;
 
+radios.forEach(rd => {
+    rd.addEventListener("change", function(){
+        time = this.value
+        if(game){
+            clearInterval(game);
+            startGame()
+        }
+    })
+})
+
 startBtn.addEventListener("click", function(){
     let newName = window.prompt("Please, enter your name");
     let newPlayer = {
@@ -19,18 +28,8 @@ startBtn.addEventListener("click", function(){
         score: 0,
     }
     players.push(newPlayer);
-    player = newPlayer
-    radios.forEach(radio => {
-        if(radio.checked){
-            time = radio.value
-        }
-    });
-    if(time != undefined){
-        game = setInterval(function(){
-            createBubble()
-        }, time);
-    }
-    console.log(form.value);
+    player = newPlayer;
+    startGame()
 });
 
 stopBtn.addEventListener("click", function(){
@@ -87,4 +86,12 @@ function createTd(player, playerScore){
     tr.append(score);
     finalScores.append(tr)
 
+}
+
+function startGame(){
+    if(time != undefined){
+        game = setInterval(function(){
+            createBubble()
+        }, time);
+    }
 }
